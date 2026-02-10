@@ -5,3 +5,6 @@ def test_health():
     resp = client.get("/health")
     assert resp.status_code == 200
     assert resp.json["status"] == "ok"
+
+def test_fail():
+    assert 1 == 2
