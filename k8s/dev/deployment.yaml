@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proj2-app
+  namespace: proj2-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proj2-app
+  template:
+    metadata:
+      labels:
+        app: proj2-app
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/bynflow/end-to-end-devops-pipeline:latest
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
