@@ -1,30 +1,31 @@
-apiVersion: apps/v1
+apiVersion: apps/v1                 # API group for Deployments
 kind: Deployment
 metadata:
-  name: proj2-app
-  namespace: proj2-dev
+  name: proj2-app                   # Name of the Deployment object
+  namespace: proj2-dev              # Target namespace (dev environment)
 spec:
-  replicas: 1
+  replicas: 1                       # Single replica for dev (no scaling yet)
   selector:
     matchLabels:
-      app: proj2-app
-  template:
+      app: proj2-app                # Must match pod labels below
+  template:                         # Pod template definition
     metadata:
       labels:
-        app: proj2-app
+        app: proj2-app              # Label assigned to pods
     spec:
       containers:
         - name: app
           image: ghcr.io/bynflow/end-to-end-devops-pipeline:latest
+          # Image stored in GHCR (using :latest for dev; immutable tags later)
           ports:
-            - containerPort: 5000
-          readinessProbe:
+            - containerPort: 5000   # Port exposed by the Flask application
+          readinessProbe:           # Determines when pod is ready to receive traffic
             httpGet:
-              path: /health
+              path: /health         # Health endpoint
               port: 5000
-            initialDelaySeconds: 2
-            periodSeconds: 5
-          livenessProbe:
+            initialDelaySeconds: 2  # Initial delay before first probe
+            periodSeconds: 5        # Probe interval
+          livenessProbe:            # Determines if container is still alive
             httpGet:
               path: /health
               port: 5000

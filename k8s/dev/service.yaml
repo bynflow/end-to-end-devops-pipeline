@@ -5,9 +5,9 @@ metadata:
   namespace: proj2-dev
 spec:
   selector:
-    app: proj2-app
+    app: proj2-app              # Targets pods with this label
   ports:
     - name: http
-      port: 80
-      targetPort: 5000
-  type: ClusterIP
+      port: 80                  # Service port inside cluster
+      targetPort: 5000          # Container port
+  type: ClusterIP               # Internal cluster exposure only
