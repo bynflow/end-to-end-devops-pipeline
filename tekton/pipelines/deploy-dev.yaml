@@ -1,0 +1,43 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: deploy-dev
+  namespace: proj2-ci
+spec:
+  params:
+    - name: repo_url
+      type: string
+    - name: revision
+      type: string
+      default: main
+    - name: image
+      type: string
+    - name: tag
+      type: string
+  workspaces:
+    - name: shared
+  tasks:
+    - name: fetch-repo
+      taskRef:
+        name: git-clone
+      params:
+        - name: url
+          value: $(params.repo_url)
+        - name: revision
+          value: $(params.revision)
+      workspaces:
+        - name: source
+          workspace: shared
+
+    - name: deploy
+      runAfter: [fetch-repo]
+      taskRef:
+        name: deploy-dev
+      params:
+        - name: image
+          value: $(params.image)
+        - name: tag
+          value: $(params.tag)
+      workspaces:
+        - name: source
+          workspace: shared

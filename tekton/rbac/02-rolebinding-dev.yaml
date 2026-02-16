@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tekton-deployer-edit
+  namespace: proj2-dev             # Grant permissions in the target env namespace
+subjects:
+  - kind: ServiceAccount
+    name: tekton-deployer
+    namespace: proj2-ci
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit                       # Built-in role: allows updating Deployments/Services/etc. in this namespace

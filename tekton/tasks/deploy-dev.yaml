@@ -1,0 +1,57 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: deploy-dev
+  namespace: proj2-ci
+spec:
+  params:
+    - name: namespace
+      type: string
+      default: proj2-dev
+      description: Target Kubernetes namespace
+    - name: deployment
+      type: string
+      default: proj2-app
+      description: Target Deployment name
+    - name: container
+      type: string
+      default: app
+      description: Target container name inside the Deployment
+    - name: image
+      type: string
+      description: Image repository (e.g. ghcr.io/org/repo)
+    - name: tag
+      type: string
+      description: Immutable image tag (e.g. short SHA)
+  workspaces:
+    - name: source
+      description: Workspace containing the repo (k8s manifests)
+  steps:
+    - name: apply-manifests
+      image: bitnami/kubectl:1.29.2
+      script: |
+        #!/bin/sh
+        set -eu
+        cd $(workspaces.source.path)
+
+        # Apply base manifests (namespace/deployment/service)
+        kubectl apply -f k8s/dev/namespace.yaml
+        kubectl apply -f k8s/dev/deployment.yaml
+        kubectl apply -f k8s/dev/service.yaml
+
+    - name: pin-image
+      image: bitnami/kubectl:1.29.2
+      script: |
+        #!/bin/sh
+        set -eu
+        NS="$(params.namespace)"
+        DEPLOY="$(params.deployment)"
+        CONTAINER="$(params.container)"
+        IMAGE="$(params.image)"
+        TAG="$(params.tag)"
+
+        # Pin immutable image tag at deploy time (reproducible + rollback-friendly)
+        kubectl -n "${NS}" set image "deployment/${DEPLOY}" "${CONTAINER}=${IMAGE}:${TAG}"
+
+        # Wait for rollout to complete
+        kubectl -n "${NS}" rollout status "deployment/${DEPLOY}" --timeout=120s
