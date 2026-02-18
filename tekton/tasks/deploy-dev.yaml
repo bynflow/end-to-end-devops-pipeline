@@ -27,31 +27,60 @@ spec:
     - name: source
       description: Workspace containing the repo (k8s manifests)
   steps:
-    - name: apply-manifests
-      image: bitnami/kubectl:1.29.2
-      script: |
-        #!/bin/sh
-        set -eu
-        cd $(workspaces.source.path)
+    # Debugging paths
+    - name: debug-workspace
+      image: alpine:3.19
+      workingDir: $(workspaces.source.path)
+      command: ["sh", "-c"]
+      args:
+        - |
+          set -eu
+          echo "PWD=$(pwd)"
+          echo "List root:"
+          ls -la
+          echo "List k8s/dev:"
+          ls -la k8s/dev || true
+    # Apply namespace manifest (idempotent)
+    - name: apply-namespace
+      image: registry.k8s.io/kubectl:v1.29.0
+      workingDir: $(workspaces.source.path)
+      command: ["kubectl"]
+      args: ["apply", "-f", "k8s/dev/namespace.yaml"]
 
-        # Apply base manifests (namespace/deployment/service)
-        kubectl apply -f k8s/dev/namespace.yaml
-        kubectl apply -f k8s/dev/deployment.yaml
-        kubectl apply -f k8s/dev/service.yaml
+    # Apply deployment manifest (base definition)
+    - name: apply-deployment
+      image: registry.k8s.io/kubectl:v1.29.0
+      workingDir: $(workspaces.source.path)
+      command: ["kubectl"]
+      args: ["apply", "-f", "k8s/dev/deployment.yaml"]
 
+    # Apply service manifest
+    - name: apply-service
+      image: registry.k8s.io/kubectl:v1.29.0
+      workingDir: $(workspaces.source.path)
+      command: ["kubectl"]
+      args: ["apply", "-f", "k8s/dev/service.yaml"]
+
+    # Pin immutable image tag at deploy time (reproducible + rollback-friendly)
     - name: pin-image
-      image: bitnami/kubectl:1.29.2
-      script: |
-        #!/bin/sh
-        set -eu
-        NS="$(params.namespace)"
-        DEPLOY="$(params.deployment)"
-        CONTAINER="$(params.container)"
-        IMAGE="$(params.image)"
-        TAG="$(params.tag)"
+      image: registry.k8s.io/kubectl:v1.29.0
+      command: ["kubectl"]
+      args:
+        - "-n"
+        - "$(params.namespace)"
+        - "set"
+        - "image"
+        - "deployment/$(params.deployment)"
+        - "$(params.container)=$(params.image):$(params.tag)"
 
-        # Pin immutable image tag at deploy time (reproducible + rollback-friendly)
-        kubectl -n "${NS}" set image "deployment/${DEPLOY}" "${CONTAINER}=${IMAGE}:${TAG}"
-
-        # Wait for rollout to complete
-        kubectl -n "${NS}" rollout status "deployment/${DEPLOY}" --timeout=120s
+    # Wait for rollout to complete
+    - name: rollout-status
+      image: registry.k8s.io/kubectl:v1.29.0
+      command: ["kubectl"]
+      args:
+        - "-n"
+        - "$(params.namespace)"
+        - "rollout"
+        - "status"
+        - "deployment/$(params.deployment)"
+        - "--timeout=120s"

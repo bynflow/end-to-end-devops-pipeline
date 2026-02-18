@@ -18,9 +18,14 @@ spec:
   steps:
     - name: clone
       image: alpine/git:2.45.2
-      script: |
-        #!/bin/sh
-        set -eu
-        cd $(workspaces.source.path)
-        git clone "$(params.url)" .
-        git checkout "$(params.revision)"
+      workingDir: $(workspaces.source.path)
+      command: ["sh", "-c"]
+      args:
+        - |
+          set -eu
+          git clone "$(params.url)" .
+          git checkout "$(params.revision)"
+          echo "=== DEBUG: repo root ==="
+          ls -la
+          echo "=== DEBUG: k8s/dev ==="
+          ls -la k8s/dev
