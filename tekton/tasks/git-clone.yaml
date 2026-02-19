@@ -23,8 +23,14 @@ spec:
       args:
         - |
           set -eu
+
+          echo "=== CLEAN WORKSPACE ==="
+          # delete EVERYTHING inside workspace, including dotfiles
+          find . -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+
           git clone "$(params.url)" .
           git checkout "$(params.revision)"
+
           echo "=== DEBUG: repo root ==="
           ls -la
           echo "=== DEBUG: k8s/dev ==="
