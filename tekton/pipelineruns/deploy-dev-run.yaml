@@ -16,7 +16,7 @@ spec:
     - name: image
       value: ghcr.io/bynflow/end-to-end-devops-pipeline
     - name: tag
-      value: f672db6   # e.g. 423d1d1 (must exist in GHCR)
+      value: sha-216b0dd    # e.g. sha-423d1d1 (must exist in GHCR)
   workspaces:
     - name: shared
       persistentVolumeClaim:
