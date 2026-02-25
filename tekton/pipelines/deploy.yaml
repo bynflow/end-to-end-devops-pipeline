@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
-  name: deploy-dev
+  name: deploy
   namespace: proj2-ci
 spec:
   params:
@@ -10,9 +10,7 @@ spec:
     - name: revision
       type: string
       default: main
-    - name: image
-      type: string
-    - name: tag
+    - name: environment
       type: string
   workspaces:
     - name: shared
@@ -32,12 +30,10 @@ spec:
     - name: deploy
       runAfter: [fetch-repo]
       taskRef:
-        name: deploy-dev
+        name: deploy
       params:
-        - name: image
-          value: $(params.image)
-        - name: tag
-          value: $(params.tag)
+        - name: environment
+          value: $(params.environment)
       workspaces:
         - name: source
           workspace: shared

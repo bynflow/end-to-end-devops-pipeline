@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: deploy
+  namespace: proj2-ci
+spec:
+  params:
+    - name: environment
+      type: string
+      description: Target environment (dev/staging/prod)
+
+  workspaces:
+    - name: source
+      description: Workspace containing the repo (k8s manifests)
+
+  steps:
+    - name: apply-overlay
+      image: registry.k8s.io/kubectl:v1.29.0
+      workingDir: $(workspaces.source.path)
+      command: ["kubectl"]
+      args: ["apply", "-k", "k8s/overlays/$(params.environment)"]
+
+    - name: rollout-status
+      image: registry.k8s.io/kubectl:v1.29.0
+      command: ["kubectl"]
+      args:
+        - "-n"
+        - "proj2-$(params.environment)"
+        - "rollout"
+        - "status"
+        - "deployment/proj2-app"
+        - "--timeout=120s"
