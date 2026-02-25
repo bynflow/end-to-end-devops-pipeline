@@ -31,7 +31,7 @@ spec:
           git clone "$(params.url)" .
           git checkout "$(params.revision)"
 
-          echo "=== DEBUG: repo root ==="
-          ls -la
-          echo "=== DEBUG: k8s/dev ==="
-          ls -la k8s/dev
+          echo "=== DEBUG: k8s/overlays ==="
+          ls -la k8s/overlays || true
+          echo "=== DEBUG: k8s/overlays/dev ==="
+          ls -la k8s/overlays/dev || true
