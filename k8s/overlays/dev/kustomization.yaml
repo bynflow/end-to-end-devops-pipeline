@@ -9,4 +9,4 @@ resources:
 
 images:
   - name: ghcr.io/bynflow/end-to-end-devops-pipeline
-    newTag: sha-f129adf
+    newTag: sha-520af79
