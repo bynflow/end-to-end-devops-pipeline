@@ -6,7 +6,3 @@ namespace: proj2-dev
 resources:
   - ../../base
   - namespace.yaml
-
-images:
-  - name: ghcr.io/bynflow/end-to-end-devops-pipeline
-    newTag: sha-520af79

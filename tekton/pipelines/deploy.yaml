@@ -12,8 +12,15 @@ spec:
       default: main
     - name: environment
       type: string
+
+    - name: image
+      type: string
+    - name: tag
+      type: string
+
   workspaces:
     - name: shared
+
   tasks:
     - name: fetch-repo
       taskRef:
@@ -34,6 +41,10 @@ spec:
       params:
         - name: environment
           value: $(params.environment)
+        - name: image
+          value: $(params.image)
+        - name: tag
+          value: $(params.tag)
       workspaces:
         - name: source
           workspace: shared

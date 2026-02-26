@@ -9,6 +9,14 @@ spec:
       type: string
       description: Target environment (dev/staging/prod)
 
+    - name: image
+      type: string
+      description: Image repository (e.g. ghcr.io/org/repo)
+
+    - name: tag
+      type: string
+      description: Immutable tag (e.g. sha-<short>)
+
   workspaces:
     - name: source
       description: Workspace containing the repo (k8s manifests)
@@ -20,6 +28,17 @@ spec:
       command: ["kubectl"]
       args: ["apply", "-k", "k8s/overlays/$(params.environment)"]
 
+    - name: pin-image
+      image: registry.k8s.io/kubectl:v1.29.0
+      command: ["kubectl"]
+      args:
+        - "-n"
+        - "proj2-$(params.environment)"
+        - "set"
+        - "image"
+        - "deployment/proj2-app"
+        - "app=$(params.image):$(params.tag)"
+
     - name: rollout-status
       image: registry.k8s.io/kubectl:v1.29.0
       command: ["kubectl"]
@@ -30,3 +49,4 @@ spec:
         - "status"
         - "deployment/proj2-app"
         - "--timeout=120s"
+
