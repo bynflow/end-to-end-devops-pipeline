@@ -6,8 +6,10 @@ metadata:
 spec:
   taskRunTemplate:
     serviceAccountName: tekton-deployer
+
   pipelineRef:
     name: deploy
+
   params:
     - name: repo_url
       value: https://github.com/bynflow/end-to-end-devops-pipeline.git
@@ -15,6 +17,12 @@ spec:
       value: main
     - name: environment
       value: dev
+
+    - name: image
+      value: ghcr.io/bynflow/end-to-end-devops-pipeline
+    - name: tag
+      value: sha-ec5cb7c
+
   workspaces:
     - name: shared
       persistentVolumeClaim:
