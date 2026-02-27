@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tekton-deployer-staging
+  namespace: proj2-staging
+subjects:
+  - kind: ServiceAccount
+    name: tekton-deployer
+    namespace: proj2-ci
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io

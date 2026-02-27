@@ -16,7 +16,7 @@ spec:
     - name: revision
       value: main
     - name: environment
-      value: dev
+      value: staging
 
     - name: image
       value: ghcr.io/bynflow/end-to-end-devops-pipeline
