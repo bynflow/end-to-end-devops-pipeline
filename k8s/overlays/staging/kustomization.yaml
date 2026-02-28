@@ -6,7 +6,3 @@ namespace: proj2-staging
 resources:
   - ../../base
   - namespace.yaml
-
-images:
-  - name: ghcr.io/bynflow/end-to-end-devops-pipeline
-    newTag: sha-ec5cb7c
