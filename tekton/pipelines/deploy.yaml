@@ -12,15 +12,17 @@ spec:
       default: main
     - name: environment
       type: string
-
+    - name: approve_prod
+      type: string
+      default: "false"
     - name: image
       type: string
+      default: ghcr.io/bynflow/end-to-end-devops-pipeline
     - name: tag
       type: string
-
+      description: Immutable tag (sha-*)
   workspaces:
     - name: shared
-
   tasks:
     - name: fetch-repo
       taskRef:
@@ -34,8 +36,18 @@ spec:
         - name: source
           workspace: shared
 
-    - name: deploy
+    - name: guard-prod
       runAfter: [fetch-repo]
+      taskRef:
+        name: guard-prod
+      params:
+        - name: environment
+          value: $(params.environment)
+        - name: approve_prod
+          value: $(params.approve_prod)
+
+    - name: deploy
+      runAfter: [guard-prod]
       taskRef:
         name: deploy
       params:
