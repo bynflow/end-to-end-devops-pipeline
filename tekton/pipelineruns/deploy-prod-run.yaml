@@ -1,28 +1,26 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  generateName: deploy-run-
+  generateName: deploy-run-prod-
   namespace: proj2-ci
 spec:
   taskRunTemplate:
     serviceAccountName: tekton-deployer
-
   pipelineRef:
     name: deploy
-
   params:
     - name: repo_url
       value: https://github.com/bynflow/end-to-end-devops-pipeline.git
     - name: revision
       value: main
     - name: environment
-      value: staging
-
+      value: prod
+    - name: approve_prod
+      value: "true"
     - name: image
       value: ghcr.io/bynflow/end-to-end-devops-pipeline
     - name: tag
       value: sha-ec5cb7c
-
   workspaces:
     - name: shared
       persistentVolumeClaim:

@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: guard-prod
+  namespace: proj2-ci
+spec:
+  params:
+    - name: environment
+      type: string
+    - name: approve_prod
+      type: string
+      default: "false"
+  steps:
+    - name: gate
+      image: alpine:3.19
+      command: ["sh", "-c"]
+      args:
+        - |
+          set -eu
+          if [ "$(params.environment)" = "prod" ] && [ "$(params.approve_prod)" != "true" ]; then
+            echo "❌ PROD gate: approve_prod must be 'true' to deploy to prod."
+            exit 1
+          fi
+          echo "✅ Gate OK (env=$(params.environment), approve_prod=$(params.approve_prod))"
