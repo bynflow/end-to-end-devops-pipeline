@@ -17,8 +17,6 @@ spec:
       value: main
     - name: environment
       value: dev
-    - name: approve_prod
-      value: "false"
 
     - name: image
       value: ghcr.io/bynflow/end-to-end-devops-pipeline
