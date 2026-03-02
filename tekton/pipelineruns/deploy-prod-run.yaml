@@ -5,7 +5,7 @@ metadata:
   namespace: proj2-ci
 spec:
   taskRunTemplate:
-    serviceAccountName: tekton-deployer
+    serviceAccountName: tekton-deployer-prod
   pipelineRef:
     name: deploy
   params:
