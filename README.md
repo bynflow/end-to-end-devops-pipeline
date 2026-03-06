@@ -316,4 +316,7 @@ A complete DevOps pipeline project showing how to test, build, publish, deploy, 
 
 ## Author
 
-Carlo Capobianchi
+Carlo Capobianchi (bynflow)
+Year: 2026
+
+This project is part of a structured DevOps learning path and professional portfolio.
