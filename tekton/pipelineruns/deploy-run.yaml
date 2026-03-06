@@ -16,13 +16,13 @@ spec:
     - name: revision
       value: main
     - name: environment
-      value: staging
+      value: dev
 
     - name: image
       value: ghcr.io/bynflow/end-to-end-devops-pipeline
-    # OLD_TAG
+    # OLD/NEW_TAG
     - name: tag
-      value: sha-ec5cb7c
+      value: sha-d22afb2
 
   workspaces:
     - name: shared
