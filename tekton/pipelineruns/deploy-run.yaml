@@ -16,10 +16,11 @@ spec:
     - name: revision
       value: main
     - name: environment
-      value: dev
+      value: staging
 
     - name: image
       value: ghcr.io/bynflow/end-to-end-devops-pipeline
+    # OLD_TAG
     - name: tag
       value: sha-ec5cb7c
 
@@ -27,3 +28,4 @@ spec:
     - name: shared
       persistentVolumeClaim:
         claimName: proj2-shared-ws
+

@@ -19,6 +19,7 @@ spec:
       value: "true"
     - name: image
       value: ghcr.io/bynflow/end-to-end-devops-pipeline
+    # OLD_TAG
     - name: tag
       value: sha-ec5cb7c
   workspaces:
