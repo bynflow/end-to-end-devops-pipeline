@@ -5,4 +5,3 @@ namespace: proj2-prod
 
 resources:
   - ../../base
-  - namespace.yaml
