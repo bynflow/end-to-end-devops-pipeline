@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number Squaring</title>
+</head>
+<body style="background-color:deepskyblue;">
+    <h1>Welcome to the Flask App!</h1>
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+    <form action="/" method="POST">
+        <label>Enter a number:</label>
+        <input type="text" name="number">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
