@@ -22,7 +22,7 @@ spec:
       value: ghcr.io/bynflow/end-to-end-devops-pipeline
     # OLD/NEW_TAG
     - name: tag
-      value: sha-d22afb2
+      value: sha-0e479b9
 
   workspaces:
     - name: shared
